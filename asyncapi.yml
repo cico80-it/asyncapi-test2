@@ -1,8 +1,8 @@
-asyncapi: '3.0.0'
+asyncapi: '2.6.0'
 id: 'urn:io.microcks.example.user-signedup'
 info:
   title: User signed-up API
-  version: 3.1.1
+  version: 3.2.1
   description: Sample AsyncAPI for user signedup events
 defaultContentType: application/json
 channels:
@@ -32,22 +32,26 @@ channels:
               type: integer
               minimum: 18
         examples:
-          - laurent:
-              summary: Example for Laurent user
-              headers: |-
-                {"my-app-header": 23}
-              payload: |-
-                {"id": "{{randomString(32)}}", "sendAt": "{{now()}}", "fullName": "Laurent Broudoux", "email": "laurent@microcks.io", "age": 41}
-          - john:
-              summary: Example for John Doe user
-              headers:
-                my-app-header: 24
-              payload:
-                id: '{{randomString(32)}}'
-                sendAt: '{{now()}}'
-                fullName: John Doe
-                email: john@microcks.io
-                age: 36
+          - name: laurent
+            summary: Example for Laurent user
+            headers:
+              my-app-header: 23
+            payload:
+              id: '{{randomString(32)}}'
+              sendAt: '{{now()}}'
+              fullName: Laurent Broudoux
+              email: laurent@microcks.io
+              age: 41
+          - name: john
+            summary: Example for John Doe user
+            headers:
+              my-app-header: 24
+            payload:
+              id: '{{randomString(32)}}'
+              sendAt: '{{now()}}'
+              fullName: John Doe
+              email: john@microcks.io
+              age: 36
   user/welcome:
     description: The topic to say welcome to an user
     publish:
@@ -68,20 +72,22 @@ channels:
             welcomeMsg:
               type: string
         examples:
-          - laurent:
-              summary: Example for Laurent user
-              headers: |-
-                {"my-app-header": 23}
-              payload: |-
-                {"id": "{{randomString(32)}}", "sendAt": "{{now()}}", "welcomeMsg": "Hi Laurent, welcome to my site!"}
-          - john:
-              summary: Example for John Doe user
-              headers:
-                my-app-header: 24
-              payload:
+          - name: laurent
+            summary: Example for Laurent user
+            headers:
+              my-app-header: 23
+            payload:
                 id: '{{randomString(32)}}'
                 sendAt: '{{now()}}'
-                welcomeMsg: Hi John, welcome to my site!
+                welcomeMsg: Hi Laurent, welcome to my site!
+          - name: john
+            summary: Example for John Doe user
+            headers:
+              my-app-header: 23
+            payload:
+              id: '{{randomString(32)}}'
+              sendAt: '{{now()}}'
+              welcomeMsg: Hi John, welcome to my site!
 components:
   messageTraits:
     commonHeaders:
