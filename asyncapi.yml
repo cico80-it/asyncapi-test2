@@ -1,151 +1,88 @@
-asyncapi: '2.6.0'
+asyncapi: '2.0.0'
+id: 'urn:io.microcks.example.user-signedup'
 info:
-  title: Streetlights Kafka API
-  version: '3.2.0'
-  description: |
-    The Smartylighting Streetlights API allows you to remotely manage the city lights.
-
-    ### Check out its awesome features:
-
-    * Turn a specific streetlight on/off 🌃
-    * Dim a specific streetlight 😎
-    * Receive real-time information about environmental lighting conditions 📈
-  license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0
-
-servers:
-  test:
-    url: test.mykafkacluster.org:8092
-    protocol: kafka-secure
-    description: Test broker
-    security:
-      - saslScram: []
-
+  title: User signed-up API
+  version: 3.1.1
+  description: Sample AsyncAPI for user signedup events
 defaultContentType: application/json
-
 channels:
-  smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured:
-    description: The topic on which measured values may be produced and consumed.
-    parameters:
-      streetlightId:
-        $ref: '#/components/parameters/streetlightId'
+  user/signedup:
+    description: The topic on which user signed up events may be consumed
+    subscribe:
+      summary: Receive informations about user signed up
+      operationId: receivedUserSignedUp
+      message:
+        description: An event describing that a user just signed up.
+        traits:
+          - $ref: '#/components/messageTraits/commonHeaders'
+        payload:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+            sendAt:
+              type: string
+            fullName:
+              type: string
+            email:
+              type: string
+              format: email
+            age:
+              type: integer
+              minimum: 18
+        examples:
+          - laurent:
+              summary: Example for Laurent user
+              headers: |-
+                {"my-app-header": 23}
+              payload: |-
+                {"id": "{{randomString(32)}}", "sendAt": "{{now()}}", "fullName": "Laurent Broudoux", "email": "laurent@microcks.io", "age": 41}
+          - john:
+              summary: Example for John Doe user
+              headers:
+                my-app-header: 24
+              payload:
+                id: '{{randomString(32)}}'
+                sendAt: '{{now()}}'
+                fullName: John Doe
+                email: john@microcks.io
+                age: 36
+  user/welcome:
+    description: The topic to say welcome to an user
     publish:
-      summary: Inform about environmental lighting conditions of a particular streetlight.
-      operationId: receiveLightMeasurement
-      traits:
-        - $ref: '#/components/operationTraits/kafka'
+      summary: Send welcome message to an user
+      operationId: sendWelcome2User
       message:
-        $ref: '#/components/messages/lightMeasured'
-
-  smartylighting.streetlights.1.0.action.{streetlightId}.turn.on:
-    parameters:
-      streetlightId:
-        $ref: '#/components/parameters/streetlightId'
-    subscribe:
-      operationId: turnOn
-      traits:
-        - $ref: '#/components/operationTraits/kafka'
-      message:
-        $ref: '#/components/messages/turnOnOff'
-
-  smartylighting.streetlights.1.0.action.{streetlightId}.turn.off:
-    parameters:
-      streetlightId:
-        $ref: '#/components/parameters/streetlightId'
-    subscribe:
-      operationId: turnOff
-      traits:
-        - $ref: '#/components/operationTraits/kafka'
-      message:
-        $ref: '#/components/messages/turnOnOff'
-
-  smartylighting.streetlights.1.0.action.{streetlightId}.dim:
-    parameters:
-      streetlightId:
-        $ref: '#/components/parameters/streetlightId'
-    subscribe:
-      operationId: dimLight
-      traits:
-        - $ref: '#/components/operationTraits/kafka'
-      message:
-        $ref: '#/components/messages/dimLight'
-
+        description: An event describing the welcome message.
+        traits:
+          - $ref: '#/components/messageTraits/commonHeaders'
+        payload:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+            sendAt:
+              type: string
+            welcomeMsg:
+              type: string
+        examples:
+          - laurent:
+              summary: Example for Laurent user
+              headers: |-
+                {"my-app-header": 23}
+              payload: |-
+                {"id": "{{randomString(32)}}", "sendAt": "{{now()}}", "welcomeMsg": "Hi Laurent, welcome to my site!"}
+          - john:
+              summary: Example for John Doe user
+              headers:
+                my-app-header: 24
+              payload:
+                id: '{{randomString(32)}}'
+                sendAt: '{{now()}}'
+                welcomeMsg: Hi John, welcome to my site!
 components:
-  messages:
-    lightMeasured:
-      name: lightMeasured
-      title: Light measured
-      summary: Inform about environmental lighting conditions of a particular streetlight.
-      contentType: application/json
-      traits:
-        - $ref: '#/components/messageTraits/commonHeaders'
-      payload:
-        $ref: "#/components/schemas/lightMeasuredPayload"
-    turnOnOff:
-      name: turnOnOff
-      title: Turn on/off
-      summary: Command a particular streetlight to turn the lights on or off.
-      traits:
-        - $ref: '#/components/messageTraits/commonHeaders'
-      payload:
-        $ref: "#/components/schemas/turnOnOffPayload"
-    dimLight:
-      name: dimLight
-      title: Dim light
-      summary: Command a particular streetlight to dim the lights.
-      traits:
-        - $ref: '#/components/messageTraits/commonHeaders'
-      payload:
-        $ref: "#/components/schemas/dimLightPayload"
-
-  schemas:
-    lightMeasuredPayload:
-      type: object
-      properties:
-        lumens:
-          type: integer
-          minimum: 0
-          description: Light intensity measured in lumens.
-        sentAt:
-          $ref: "#/components/schemas/sentAt"
-    turnOnOffPayload:
-      type: object
-      properties:
-        command:
-          type: string
-          enum:
-            - on
-            - off
-          description: Whether to turn on or off the light.
-        sentAt:
-          $ref: "#/components/schemas/sentAt"
-    dimLightPayload:
-      type: object
-      properties:
-        percentage:
-          type: integer
-          description: Percentage to which the light should be dimmed to.
-          minimum: 0
-          maximum: 100
-        sentAt:
-          $ref: "#/components/schemas/sentAt"
-    sentAt:
-      type: string
-      format: date-time
-      description: Date and time when the message was sent.
-
-  securitySchemes:
-    saslScram:
-      type: scramSha256
-      description: Provide your username and password for SASL/SCRAM authentication
-
-  parameters:
-    streetlightId:
-      description: The ID of the streetlight.
-      schema:
-        type: string
-
   messageTraits:
     commonHeaders:
       headers:
@@ -155,9 +92,3 @@ components:
             type: integer
             minimum: 0
             maximum: 100
-
-  operationTraits:
-    kafka:
-      bindings:
-        kafka:
-          clientId: my-app-id
