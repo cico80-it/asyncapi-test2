@@ -1,0 +1,128 @@
+asyncapi: '2.6.0'
+id: 'urn:io.microcks.example.user-signedup'
+info:
+  title: User signed-up API
+  version: 3.3.0
+  description: Sample AsyncAPI for user signedup events
+  x-kafkaCluster: <ZONE>-<ENV>
+  x-borkers: 3
+  x-users:
+    - name: <username>-kafka-<KAPP>-<ENV>
+    acl:
+      - topic: user-signedup
+        operation:
+          - Read
+          - Write
+          - Describe
+defaultContentType: application/json
+channels:
+  user-signedup:
+    description: The topic on which user signed up events may be consumed
+    bindings:
+      kafka:
+        topic: 'user-signedup'
+        replicas: 1
+        partitions: 1
+        topicConfiguration:
+          delete.retention.ms: 86400000
+          max.message.bytes: 1048588
+          x-compression-type: uncompressed
+    subscribe:
+      summary: Receive informations about user signed up
+      operationId: receivedUserSignedUp
+      message:
+        description: An event describing that a user just signed up.
+        traits:
+          - $ref: '#/components/messageTraits/commonHeaders'
+        payload:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+            sendAt:
+              type: string
+            fullName:
+              type: string
+            email:
+              type: string
+              format: email
+            age:
+              type: integer
+              minimum: 18
+        examples:
+          - name: laurent
+            summary: Example for Laurent user
+            headers:
+              my-app-header: 23
+            payload:
+              id: '{{randomString(32)}}'
+              sendAt: '{{now()}}'
+              fullName: Laurent Broudoux
+              email: laurent@microcks.io
+              age: 41
+          - name: john
+            summary: Example for John Doe user
+            headers:
+              my-app-header: 24
+            payload:
+              id: '{{randomString(32)}}'
+              sendAt: '{{now()}}'
+              fullName: John Doe
+              email: john@microcks.io
+              age: 36
+  user-welcome:
+    description: The topic to say welcome to an user
+    bindings:
+      kafka:
+        topic: 'user-welcome'
+        replicas: 1
+        partitions: 1
+        topicConfiguration:
+          delete.retention.ms: 86400000
+          max.message.bytes: 1048588
+          x-compression-type: uncompressed
+    publish:
+      summary: Send welcome message to an user
+      operationId: sendWelcome2User
+      message:
+        description: An event describing the welcome message.
+        traits:
+          - $ref: '#/components/messageTraits/commonHeaders'
+        payload:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+            sendAt:
+              type: string
+            welcomeMsg:
+              type: string
+        examples:
+          - name: laurent
+            summary: Example for Laurent user
+            headers:
+              my-app-header: 23
+            payload:
+                id: '{{randomString(32)}}'
+                sendAt: '{{now()}}'
+                welcomeMsg: Hi Laurent, welcome to my site!
+          - name: john
+            summary: Example for John Doe user
+            headers:
+              my-app-header: 23
+            payload:
+              id: '{{randomString(32)}}'
+              sendAt: '{{now()}}'
+              welcomeMsg: Hi John, welcome to my site!
+components:
+  messageTraits:
+    commonHeaders:
+      headers:
+        type: object
+        properties:
+          my-app-header:
+            type: integer
+            minimum: 0
+            maximum: 100
