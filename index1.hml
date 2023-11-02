@@ -1,0 +1,7 @@
+<!-- Remove 'webcomponentsjs' if no support for older browsers is required -->
+<!-- <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.5.0/webcomponents-bundle.js"></script> -->
+<script src="https://unpkg.com/@asyncapi/web-component@1.0.0-next.39/lib/asyncapi-web-component.js" defer></script>
+<asyncapi-component
+  schema="https://raw.githubusercontent.com/cico80-it/asyncapi-test2/main/asyncapi.yml"
+  cssImportPath="https://unpkg.com/@asyncapi/react-component@1.0.0-next.39/styles/default.min.css">
+</asyncapi-component>
