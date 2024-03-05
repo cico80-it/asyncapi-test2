@@ -1,0 +1,152 @@
+{
+  "fields": [
+    {
+      "name": "ID",
+      "type": "long"
+    },
+    {
+      "default": null,
+      "name": "SOCIETA",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "CODICE_ALLARME",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "CODICE_APPARATO",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "POSTO_MISURA",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "ORA_ALLARME",
+      "type": [
+        "null",
+        {
+          "connect.name": "org.apache.kafka.connect.data.Date",
+          "connect.version": 1,
+          "logicalType": "date",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "default": null,
+      "name": "ORA_RICEVIMENTO",
+      "type": [
+        "null",
+        {
+          "connect.name": "org.apache.kafka.connect.data.Date",
+          "connect.version": 1,
+          "logicalType": "date",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "default": null,
+      "name": "TIPO_RICEZIONE",
+      "type": [
+        "null",
+        {
+          "connect.type": "int8",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "default": null,
+      "name": "GRAND_IN_ALLARME",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "ALTRE_INFO",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "table",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "scn",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "op_type",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "op_ts",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "current_ts",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "row_id",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "username",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ],
+  "name": "ConnectDefault",
+  "namespace": "io.confluent.connect.avro",
+  "type": "record"
+}
